@@ -1,4 +1,4 @@
-var addButton=document.getElementById('addTask');
+﻿var addButton=document.getElementById('addTask');
 var inputTask=document.getElementById('newTask');
 var unfinishedTasks=document.getElementById('unfinishedTasks');
 var finishedTasks=document.getElementById('finishedTasks');
@@ -6,46 +6,6 @@ var deletedTasks=document.getElementById('deletedTasks');
 var finishAllButton=document.getElementById('finishAll');
 var clearFinishedTasksButton = document.getElementById('clearFinishedTasks');
 var trueDeleteButton=document.getElementById('trueDelete');
-      
-
-function save() {
-    var unfinishedTasksArr=[];  
-    var finishedTasksArr=[];  
-
-    for(var i=1; i<unfinishedTasks.children.length; i++) {
-        unfinishedTasksArr.push(unfinishedTasks.children[i].getElementsByTagName('label')[0].innerText);
-        
-    }
-
-    for(var i=1; i<finishedTasks.children.length; i++) {
-        finishedTasksArr.push(finishedTasks.children[i].getElementsByTagName('label')[0].innerText);
-    }
-    
-    
-    localStorage.removeItem('todo');
-    localStorage.setItem('todo', JSON.stringify({unfinishedTasks: unfinishedTasksArr, finishedTasks: finishedTasksArr}));
-}
-
-function load() {
-    return JSON.parse(localStorage.getItem('todo'));
-}
-
-{
-    var data=load();
-    if (unfinishedTasks) {
-        for (var i=0; i<data.unfinishedTasks.length; i++){
-            var listItem = createNewElement(data.unfinishedTasks[i]);
-            unfinishedTasks.appendChild(listItem);
-        }
-    }
-
-    if (finishedTasks) {
-        for (var j=0; j<data.finishedTasks.length; j++) {
-            var listItem = createNewElement(data.finishedTasks[j]);
-            finishedTasks.appendChild(listItem);
-        }
-    }
-}
 
 
 addButton.onclick=addTask;
@@ -175,4 +135,44 @@ function trueDelete() {
     list.appendChild(trueDeleteButton);
     trueDeleteButton.onclick=trueDelete;    
 }
+
+function save() {
+    var unfinishedTasksArr=[];  
+    var finishedTasksArr=[];  
+
+    for(var i=1; i<unfinishedTasks.children.length; i++) {
+        unfinishedTasksArr.push(unfinishedTasks.children[i].getElementsByTagName('label')[0].innerText);
+        
+    }
+
+    for(var i=1; i<finishedTasks.children.length; i++) {
+        finishedTasksArr.push(finishedTasks.children[i].getElementsByTagName('label')[0].innerText);
+    }
+    
+    
+    localStorage.removeItem('todo');
+    localStorage.setItem('todo', JSON.stringify({unfinishedTasks: unfinishedTasksArr, finishedTasks: finishedTasksArr}));
+}
+
+function load() {
+    return JSON.parse(localStorage.getItem('todo'));
+}
+
+{
+    var data=load();
+    if (unfinishedTasks) {
+        for (var i=0; i<data.unfinishedTasks.length; i++){
+            var listItem = createNewElement(data.unfinishedTasks[i]);
+            unfinishedTasks.appendChild(listItem);
+        }
+    }
+
+    if (finishedTasks) {
+        for (var j=0; j<data.finishedTasks.length; j++) {
+            var listItem = createNewElement(data.finishedTasks[j]);
+            finishedTasks.appendChild(listItem);
+        }
+    }
+}
+
 
