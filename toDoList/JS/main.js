@@ -1,50 +1,62 @@
-let myNewTaskInput = document.getElementById("myNewTaskInput");
-let addNewTaskButton = document.getElementById("addNewTaskButton");
-let unfinishedTasks = document.getElementById("unfinishedTasks");
-let finishedTasks = document.getElementById("finishedTasks");
-let deletedTasks = document.getElementById("deletedTasks");
+const myNewTaskInput = document.getElementById("myNewTaskInput");
+const addNewTaskButton = document.getElementById("addNewTaskButton");
 
-const finishedTasksListHeader = document.createElement("h3");
-    finishedTasksListHeader.textContent="Finished Tasks";
-    finishedTasksListHeader.id="finishedTasksListHeader";
+//Определение элементов, которые будут динамически добавлятся  на страницу
+
+    let unfinishedTasks = document.getElementById("unfinishedTasks");
+    let finishedTasks = document.getElementById("finishedTasks");
+    let deletedTasks = document.getElementById("deletedTasks");
+
+    const finishedTasksListHeader = document.createElement("h3");
+        finishedTasksListHeader.textContent="Finished Tasks";
+        finishedTasksListHeader.id="finishedTasksListHeader";
 
 
-const deletedTasksListHeader = document.createElement("h3");
-    deletedTasksListHeader.textContent="Deleted Tasks";
-    deletedTasksListHeader.id="deletedTasksListHeader";
+    const deletedTasksListHeader = document.createElement("h3");
+        deletedTasksListHeader.textContent="Deleted Tasks";
+        deletedTasksListHeader.id="deletedTasksListHeader";
 
-const finishAllTaskButton = document.createElement("button");
-    finishAllTaskButton.textContent="finishAll";
-    finishAllTaskButton.id = "finishAllTaskButton";
-    finishAllTaskButton.onclick = finishAllUnfinishedTasks;
+    const finishAllTaskButton = document.createElement("button");
+        finishAllTaskButton.textContent="finishAll";
+        finishAllTaskButton.id = "finishAllTaskButton";
+        finishAllTaskButton.onclick = finishAllUnfinishedTasks;
 
-const deleteAllFinishedTasksButton = document.createElement("button");
-    deleteAllFinishedTasksButton.textContent="deleteAll";
-    deleteAllFinishedTasksButton.id = "deleteAllFinishedTasksButton";
-    deleteAllFinishedTasksButton.onclick = deleteAllFinishedTasks;
+    const deleteAllFinishedTasksButton = document.createElement("button");
+        deleteAllFinishedTasksButton.textContent="deleteAll";
+        deleteAllFinishedTasksButton.id = "deleteAllFinishedTasksButton";
+        deleteAllFinishedTasksButton.onclick = deleteAllFinishedTasks;
 
-myNewTaskInput.addEventListener("keypress", (enterPressed));
+    const clearDeletedTasksButton = document.createElement("button");
+        clearDeletedTasksButton.textContent="clear";
+        clearDeletedTasksButton.id = "clearDeletedTasksButton";
+        clearDeletedTasksButton.onclick = clearAllDeletedTasks;
 
-function enterPressed(key) {
-    if (key.keyCode == 13) {
-        addNewTask();
-    }
-}
 
-addNewTaskButton.onclick = addNewTask;
+//Добавление обработчика события для нажатия Enter
+    myNewTaskInput.addEventListener("keypress", (enterPressed));
 
-function addNewTask() {   
-    if (myNewTaskInput.value) {
-        if (unfinishedTasks.childElementCount == 0) {
-            unfinishedTasks.appendChild(finishAllTaskButton);
+    function enterPressed(key) {
+        if (key.keyCode == 13) {
+            addNewTask();
         }
-    unfinishedTasks.appendChild(createNewUnfinishedTask(myNewTaskInput.value));
-    myNewTaskInput.value="";
-    save();
     }
-}
 
-function createNewUnfinishedTask(textValue) {
+//Обработчик события для клика по кнопке "Add"
+    addNewTaskButton.onclick = addNewTask;
+
+    function addNewTask() {   
+        if (myNewTaskInput.value) {
+            if (unfinishedTasks.childElementCount == 0) {
+                unfinishedTasks.appendChild(finishAllTaskButton);
+            }
+        unfinishedTasks.appendChild(createNewUnfinishedTask(myNewTaskInput.value));
+        myNewTaskInput.value="";
+        save();
+        }
+    }
+
+//Создаёт новый элемент списка
+function createNewUnfinishedTask(textValue) {    
     let listItem = document.createElement("li"); 
 
     let taskTextLabel = document.createElement("label");
@@ -71,6 +83,7 @@ function createNewUnfinishedTask(textValue) {
     return listItem; 
 }
 
+//Функция для переноса задачи в список завершенных - в список незавершенных
 function switchFinishedUnfinished() {
     let parentNode = this.parentNode;
     if (parentNode.className == "unfinishedTask") {
@@ -89,6 +102,7 @@ function switchFinishedUnfinished() {
     save();
 }
 
+//Функция для переноса задачив список удаленных - восстановления из удаленных
 function switchDeletedUndeleted() {
     let parentNode = this.parentNode;
 
@@ -97,6 +111,7 @@ function switchDeletedUndeleted() {
             this.textContent="recover";
             parentNode.className="deletedFromUnfinishedTasks";
             checkDeletedTasksHeader();
+            checkNeedClearAllDeletedTasksButton();
             deletedTasks.appendChild(parentNode);
             checkNeedFinishAllTasksButton();             
             break;
@@ -105,6 +120,7 @@ function switchDeletedUndeleted() {
             this.textContent="recover";
             parentNode.className="deletedFromFinishedTasks";
             checkDeletedTasksHeader();
+            checkNeedClearAllDeletedTasksButton()
             deletedTasks.appendChild(parentNode); 
             checkNeedDeleteAllFinishedTasksButton();
             checkFinishedTasksHeader();          
@@ -115,6 +131,7 @@ function switchDeletedUndeleted() {
             checkNeedFinishAllTasksButton();
             parentNode.className="unfinishedTask";
             unfinishedTasks.appendChild(parentNode);
+            checkNeedClearAllDeletedTasksButton()
             checkDeletedTasksHeader();            
             break;
         }
@@ -124,6 +141,7 @@ function switchDeletedUndeleted() {
             checkFinishedTasksHeader();
             checkNeedDeleteAllFinishedTasksButton();
             finishedTasks.appendChild(parentNode);  
+            checkNeedClearAllDeletedTasksButton()
             checkDeletedTasksHeader();          
             break;
         }
@@ -131,24 +149,7 @@ function switchDeletedUndeleted() {
     save();
 }
 
-function checkFinishedTasksHeader() {
-    if (finishedTasks.childElementCount == 0) {        
-        finishedTasks.appendChild(finishedTasksListHeader);
-    } else if (finishedTasks.childElementCount == 1) {
-        finishedTasks.removeChild(document.getElementById("finishedTasksListHeader"));
-    }
-    save();
-}
-
-function checkDeletedTasksHeader() {
-    if (deletedTasks.childElementCount == 0) {        
-        deletedTasks.appendChild(deletedTasksListHeader); 
-    } else if (deletedTasks.childElementCount == 1) {
-        deletedTasks.removeChild(document.getElementById("deletedTasksListHeader"));
-    } 
-    save();     
-}
-
+//Обработка функционала редактирования задачи.
 function switchEditSaveTask() {
     let parentNode = this.parentNode;
     if (parentNode.querySelector("label")) { 
@@ -169,12 +170,54 @@ function switchEditSaveTask() {
     }     
 }
 
+//Завершение всех незавершенных задач.
 function finishAllUnfinishedTasks() {
     while (unfinishedTasks.childElementCount > 1) {        
         unfinishedTasks.children[1].firstChild.onclick();      
     }        
 }
 
+//Функция для удаления всех завершенных задач.
+function deleteAllFinishedTasks() {
+    while (finishedTasks.childElementCount > 2) {        
+        finishedTasks.children[2].children[3].onclick();       
+    }    
+    checkNeedDeleteAllFinishedTasksButton();
+    save();
+}
+
+//Функция очистки списка удаленных задач.
+function clearAllDeletedTasks() {
+    parentNode = this.parentNode;
+    while (deletedTasks.childElementCount > 0) {
+        parentNode.removeChild(parentNode.firstChild);
+    }    
+}
+
+//Функция для проверки необходимости заголовка списка завершенных задач.
+//Если нужен - добавляет его. Не нужен (список завершенных задач пуст) - удаляет
+function checkFinishedTasksHeader() {
+    if (finishedTasks.childElementCount == 0) {        
+        finishedTasks.appendChild(finishedTasksListHeader);
+    } else if (finishedTasks.childElementCount == 1) {
+        finishedTasks.removeChild(document.getElementById("finishedTasksListHeader"));
+    }
+    save();
+}
+
+//Функция для проверки необходимости заголовка списка удаленных задач.
+//Если нужен - добавляет его. Не нужен (список завершенных задач пуст) - удаляет
+function checkDeletedTasksHeader() {
+    if (deletedTasks.childElementCount == 0) {        
+        deletedTasks.appendChild(deletedTasksListHeader); 
+    } else if (deletedTasks.childElementCount == 1) {
+        deletedTasks.removeChild(document.getElementById("deletedTasksListHeader"));
+    } 
+    save();     
+}
+
+//Функция для проверки необходимости кнопки завершения всех незавершенных задач.
+//Если нужна - добавляет, иначе - удаляет.
 function checkNeedFinishAllTasksButton() {
     if (unfinishedTasks.childElementCount == 1) {
         unfinishedTasks.removeChild(document.getElementById("finishAllTaskButton"));
@@ -184,14 +227,8 @@ function checkNeedFinishAllTasksButton() {
     save();
 }
 
-function deleteAllFinishedTasks() {
-    while (finishedTasks.childElementCount > 2) {        
-        finishedTasks.children[2].children[3].onclick();       
-    }    
-    checkNeedDeleteAllFinishedTasksButton();
-    save();
-}
-
+//Функция для проверки необходимости кнопки удаления всех завершенных задач.
+//Если нужна - добавляет, иначе - удаляет.
 function checkNeedDeleteAllFinishedTasksButton() {
     if (finishedTasks.childElementCount == 2) {
         finishedTasks.removeChild(document.getElementById("deleteAllFinishedTasksButton"));
@@ -201,6 +238,17 @@ function checkNeedDeleteAllFinishedTasksButton() {
     save();
 }
 
+//Функция для проверки необходимости кнопки очистки списка удаленных задач.
+//Если нужна - добавляет, иначе - удаляет.
+function checkNeedClearAllDeletedTasksButton() {
+    if (deletedTasks.childElementCount == 2) {
+        deletedTasks.removeChild(document.getElementById("clearDeletedTasksButton"));
+    } else if (deletedTasks.childElementCount == 1) {
+        deletedTasks.appendChild(clearDeletedTasksButton);
+    }
+}
+
+//Функция сохранения состояния списков незавершеннеых и завершенных задач.
 function save() {
     try {
         while (unfinishedTasks.querySelector("input")) {
@@ -226,6 +274,7 @@ function save() {
     }
 }
 
+//Функция загрузки предыдущего состояния списков незавершеннеых и завершенных задач.
 function load() {
     return JSON.parse(localStorage.getItem("ToDoList"));
 }
@@ -233,6 +282,7 @@ function load() {
 
 let tempData = load();
 
+//Загрузка предыдущего состояния.
 if (tempData) {
     if (unfinishedTasks.childElementCount == 0 && tempData.unfinishedTasks.length > 0) {
         unfinishedTasks.appendChild(finishAllTaskButton);    

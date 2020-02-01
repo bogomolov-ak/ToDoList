@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico&display=swap&subset=cyrillic');
+
 body {
     background: #fff;
     color: #333;   
     display: block;
     width: 400px;
     margin: 100px auto 0;
+    font-family: 'Pacifico', cursive;
 }
 
 h1, h3 {    
@@ -14,7 +17,8 @@ input, button {
 outline: none;
 }
 
-input {    
+input {   
+    width: 312px; 
     margin: 0;
     font-size: 18px;
     line-height: 18px;
@@ -27,11 +31,7 @@ input {
 }
 
 #unfinishedTasks {
-    padding-inline-start: 0px;
-}
-
-#unfinishedTasks > input {
-    
+    padding-inline-start: 0px;    
 }
 
 button {
@@ -42,6 +42,7 @@ font-size: 15px;
 width: 60px;
 margin: 10px 0 0;
 cursor: pointer;
+font-family: 'Pacifico', cursive;
 }
 
 button:hover {
@@ -55,27 +56,38 @@ border-bottom: 1px solid #eee;
 list-style-type: none;
 }
 
-label {
+label {    
     display: inline-block ;
-    font-size: 18px;
-    line-height: 40px;    
-    width: 178px;
-    padding: 0 0 0 11px;    
+    font-size: 18px;    
+    line-height: 20px;    
+    width: 208px; 
+    padding: 0 0 0 11px; 
 }
 
+
+
 #unfinishedTasks > li > label {
-    width: 218px;
+    width: 248px;
+    font-weight: bolder;
 }
 
 li > input {
-    width: 167px;
+    width: 197px;
 }
 
 #unfinishedTasks > li > input {
-    width: 207px;
+    width: 237px;
 }
 
 .finishedTask > label {
+    text-decoration: line-through;
+}
+
+.deletedFromFinishedTasks > label {
+    text-decoration: line-through;
+}
+
+.deletedFromUnfinishedTasks > label {
     text-decoration: line-through;
 }
 
