@@ -81,6 +81,9 @@ function createNewUnfinishedTask(textValue) {
     listItem.appendChild(switchESButton);
     listItem.appendChild(switchDUButton);    
     listItem.className = "unfinishedTask";
+    listItem.draggable=true;    
+    listItem.addEventListener("dragstart", onDragStart);
+    listItem.id = taskTextLabel.textContent;
 
     return listItem; 
 }
@@ -297,4 +300,34 @@ if (tempData) {
             tempUnfinishedTask.firstChild.onclick();
         }    
     }
+}
+
+
+//Немного перетаскивания.
+function onDragStart(event) {
+    event
+      .dataTransfer
+      .setData("text", event.target.id);
+}
+
+function onDragOver(event) {
+    event.preventDefault();
+}
+
+function onDrop(event) {
+    const id = event
+        .dataTransfer
+        .getData("text");
+
+    if (document.getElementById(id).className == "finishedTask" && (
+        event.target.id == "myNewTaskInput" || event.target.id == "unfinishedTasks" || event.target.parentNode.id == "unfinishedTasks" || event.target.parentNode.parentNode.id == "unfinishedTasks")) {
+        document.getElementById(id).firstChild.onclick();    
+    }  else if (document.getElementById(id).className == "unfinishedTask" && 
+    (event.target.id == "finishedTasks" || event.target.parentNode.id == "finishedTasks" || event.target.parentNode.parentNode.id)) {
+        document.getElementById(id).firstChild.onclick();    
+    }  
+
+    event
+        .dataTransfer
+        .clearData();
 }

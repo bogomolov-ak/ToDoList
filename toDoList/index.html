@@ -11,15 +11,20 @@
 <body>    
     <header>
         <h1>My To Do List</h1>            
-        <input id="myNewTaskInput" type="text" placeholder="I want to do...">
+        <input id="myNewTaskInput" type="text" placeholder="I want to do..." ondragover='onDragOver(event);'
+        ondrop='onDrop(event);' dropzone="true">
         <button id="addNewTaskButton">Add</button> 
     </header>
     <main>
-        <ul id="unfinishedTasks">
+        <ul id="unfinishedTasks" ondragover='onDragOver(event);'
+        ondrop='onDrop(event);' dropzone="true">
+            
         </ul>
-        <ul id="finishedTasks">
+        <ul id="finishedTasks" ondragover='onDragOver(event);'
+        ondrop='onDrop(event);' dropzone="true">
         </ul>
-        <ul id="deletedTasks">
+        <ul id="deletedTasks" ondragover='onDragOver(event);'
+        ondrop='onDrop(event);' dropzone="true">
         </ul>
     </main>   
 </body>
