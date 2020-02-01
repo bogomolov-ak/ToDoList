@@ -1,178 +1,253 @@
-﻿var addButton=document.getElementById('addTask');
-var inputTask=document.getElementById('newTask');
-var unfinishedTasks=document.getElementById('unfinishedTasks');
-var finishedTasks=document.getElementById('finishedTasks');
-var deletedTasks=document.getElementById('deletedTasks');
-var finishAllButton=document.getElementById('finishAll');
-var clearFinishedTasksButton = document.getElementById('clearFinishedTasks');
-var trueDeleteButton=document.getElementById('trueDelete');
+let myNewTaskInput = document.getElementById("myNewTaskInput");
+let addNewTaskButton = document.getElementById("addNewTaskButton");
+let unfinishedTasks = document.getElementById("unfinishedTasks");
+let finishedTasks = document.getElementById("finishedTasks");
+let deletedTasks = document.getElementById("deletedTasks");
+
+const finishedTasksListHeader = document.createElement("h3");
+    finishedTasksListHeader.textContent="Finished Tasks";
+    finishedTasksListHeader.id="finishedTasksListHeader";
 
 
-addButton.onclick=addTask;
-function addTask() {
-    if(inputTask.value) {
-        var listItem=createNewElement(inputTask.value);
-        unfinishedTasks.appendChild(listItem);
-        inputTask.value="";
-        save();
+const deletedTasksListHeader = document.createElement("h3");
+    deletedTasksListHeader.textContent="Deleted Tasks";
+    deletedTasksListHeader.id="deletedTasksListHeader";
+
+const finishAllTaskButton = document.createElement("button");
+    finishAllTaskButton.textContent="finishAll";
+    finishAllTaskButton.id = "finishAllTaskButton";
+    finishAllTaskButton.onclick = finishAllUnfinishedTasks;
+
+const deleteAllFinishedTasksButton = document.createElement("button");
+    deleteAllFinishedTasksButton.textContent="deleteAll";
+    deleteAllFinishedTasksButton.id = "deleteAllFinishedTasksButton";
+    deleteAllFinishedTasksButton.onclick = deleteAllFinishedTasks;
+
+myNewTaskInput.addEventListener("keypress", (enterPressed));
+
+function enterPressed(key) {
+    if (key.keyCode == 13) {
+        addNewTask();
     }
 }
 
-function createNewElement(task) {
-    var listItem=document.createElement('li');
+addNewTaskButton.onclick = addNewTask;
 
-    var finishButton=document.createElement('button');
-    finishButton.className='anotherButton';
-    finishButton.textContent="Выполнено"; 
-    finishButton.onclick=finishTask;
-
-    var label=document.createElement('label');    
-    label.innerText=task; 
-
-    var changeButton=document.createElement('button');
-    changeButton.className='anotherButton';
-    changeButton.textContent="Изменить";
-    changeButton.onclick=editTask;
-
-    var deleteButton=document.createElement('button');
-    deleteButton.className='anotherButton';
-    deleteButton.textContent="Удалить";
-    deleteButton.onclick=deleteTask;
-
-    listItem.appendChild(label);
-    listItem.appendChild(finishButton);
-    listItem.appendChild(changeButton);
-    listItem.appendChild(deleteButton);
-
-    return listItem;
+function addNewTask() {   
+    if (myNewTaskInput.value) {
+        if (unfinishedTasks.childElementCount == 0) {
+            unfinishedTasks.appendChild(finishAllTaskButton);
+        }
+    unfinishedTasks.appendChild(createNewUnfinishedTask(myNewTaskInput.value));
+    myNewTaskInput.value="";
+    save();
+    }
 }
 
-function deleteTask() {
-    var listItem=this.parentNode;
-    this.textContent="Восстановить";
-    this.onclick=recoverTask;    
-    deletedTasks.appendChild(listItem);
+function createNewUnfinishedTask(textValue) {
+    let listItem = document.createElement("li"); 
+
+    let taskTextLabel = document.createElement("label");
+    taskTextLabel.textContent=textValue;
+
+    let switchFUButton = document.createElement("button"); 
+    switchFUButton.className = "switchFUButton";   
+    switchFUButton.onclick=switchFinishedUnfinished;
+
+    let switchESButton = document.createElement("button");    
+    switchESButton.textContent="edit";
+    switchESButton.onclick=switchEditSaveTask;
+
+    let switchDUButton = document.createElement("button");    
+    switchDUButton.textContent="delete";
+    switchDUButton.onclick=switchDeletedUndeleted;
+
+    listItem.appendChild(switchFUButton);
+    listItem.appendChild(taskTextLabel);
+    listItem.appendChild(switchESButton);
+    listItem.appendChild(switchDUButton);    
+    listItem.className = "unfinishedTask";
+
+    return listItem; 
+}
+
+function switchFinishedUnfinished() {
+    let parentNode = this.parentNode;
+    if (parentNode.className == "unfinishedTask") {
+        checkFinishedTasksHeader();
+        checkNeedDeleteAllFinishedTasksButton();
+        parentNode.className="finishedTask"; 
+        finishedTasks.appendChild(parentNode);
+        checkNeedFinishAllTasksButton();        
+    } else if (parentNode.className == "finishedTask") {
+        checkNeedFinishAllTasksButton();
+        parentNode.className="unfinishedTask";       
+        unfinishedTasks.appendChild(parentNode); 
+        checkNeedDeleteAllFinishedTasksButton();
+        checkFinishedTasksHeader();       
+    }
     save();
 }
 
-function editTask() {
-    var listItem=this.parentNode;
-    var label = listItem.querySelector('label');
-    var textTask = label.textContent;
-    var input = document.createElement('input');
-    input.placeholder = textTask;
-    label = listItem.replaceChild(input, label);
-    console.log(textTask);
-    this.textContent="Сохранить";
-    this.onclick=saveTask; 
-}
+function switchDeletedUndeleted() {
+    let parentNode = this.parentNode;
 
-function saveTask() {
-    var listItem=this.parentNode;
-    var input = listItem.querySelector('input');
-    var textTask = input.value;
-    var label = document.createElement('label');
-    label.innerText = textTask;
-    input = listItem.replaceChild(label, input);
-    console.log(textTask);
-    this.textContent="Изменить";
-    this.onclick=editTask;
+    switch (parentNode.className) {
+        case "unfinishedTask" : {
+            this.textContent="recover";
+            parentNode.className="deletedFromUnfinishedTasks";
+            checkDeletedTasksHeader();
+            deletedTasks.appendChild(parentNode);
+            checkNeedFinishAllTasksButton();             
+            break;
+        }
+        case "finishedTask" : {
+            this.textContent="recover";
+            parentNode.className="deletedFromFinishedTasks";
+            checkDeletedTasksHeader();
+            deletedTasks.appendChild(parentNode); 
+            checkNeedDeleteAllFinishedTasksButton();
+            checkFinishedTasksHeader();          
+            break;
+        }
+        case "deletedFromUnfinishedTasks" : {
+            this.textContent="delete";
+            checkNeedFinishAllTasksButton();
+            parentNode.className="unfinishedTask";
+            unfinishedTasks.appendChild(parentNode);
+            checkDeletedTasksHeader();            
+            break;
+        }
+        case "deletedFromFinishedTasks" : {
+            this.textContent="delete";
+            parentNode.className="finishedTask";
+            checkFinishedTasksHeader();
+            checkNeedDeleteAllFinishedTasksButton();
+            finishedTasks.appendChild(parentNode);  
+            checkDeletedTasksHeader();          
+            break;
+        }
+    }
     save();
 }
 
-function finishTask() {
-    var listItem=this.parentNode;
-    this.textContent="Вернуть";
-    this.onclick=unfinishTask;    
-    finishedTasks.appendChild(listItem);
+function checkFinishedTasksHeader() {
+    if (finishedTasks.childElementCount == 0) {        
+        finishedTasks.appendChild(finishedTasksListHeader);
+    } else if (finishedTasks.childElementCount == 1) {
+        finishedTasks.removeChild(document.getElementById("finishedTasksListHeader"));
+    }
     save();
 }
 
-function unfinishTask() {
-    var listItem=this.parentNode;
-    this.textContent="Выполнено";
-    this.onclick=finishTask;    
-    unfinishedTasks.appendChild(listItem);
+function checkDeletedTasksHeader() {
+    if (deletedTasks.childElementCount == 0) {        
+        deletedTasks.appendChild(deletedTasksListHeader); 
+    } else if (deletedTasks.childElementCount == 1) {
+        deletedTasks.removeChild(document.getElementById("deletedTasksListHeader"));
+    } 
+    save();     
+}
+
+function switchEditSaveTask() {
+    let parentNode = this.parentNode;
+    if (parentNode.querySelector("label")) { 
+        this.textContent="save";
+        let label = parentNode.querySelector("label");
+        let textContent = label.textContent;
+        let input = document.createElement("input");
+        input.value = textContent;
+        label = parentNode.replaceChild(input, label);
+    } else {        
+        this.textContent="edit";
+        let input = parentNode.querySelector("input");
+        let textContent = input.value;
+        let label = document.createElement("label");
+        label.textContent = textContent;
+        input = parentNode.replaceChild(label, input);   
+        save();     
+    }     
+}
+
+function finishAllUnfinishedTasks() {
+    while (unfinishedTasks.childElementCount > 1) {        
+        unfinishedTasks.children[1].firstChild.onclick();      
+    }        
+}
+
+function checkNeedFinishAllTasksButton() {
+    if (unfinishedTasks.childElementCount == 1) {
+        unfinishedTasks.removeChild(document.getElementById("finishAllTaskButton"));
+    } else if (unfinishedTasks.childElementCount == 0) {
+        unfinishedTasks.appendChild(finishAllTaskButton);
+    }
     save();
 }
 
-function recoverTask() {
-    var listItem=this.parentNode;
-    this.textContent="Удалить";
-    this.onclick=deleteTask;    
-    unfinishedTasks.appendChild(listItem);
+function deleteAllFinishedTasks() {
+    while (finishedTasks.childElementCount > 2) {        
+        finishedTasks.children[2].children[3].onclick();       
+    }    
+    checkNeedDeleteAllFinishedTasksButton();
     save();
 }
 
-finishAllButton.onclick=finishAll;
-function finishAll() {
-    var list=this.parentNode;    
-    while( list.firstChild ){
-        finishedTasks.appendChild(list.firstChild);
-      }    
-    list.appendChild(finishAllButton);
-    finishAllButton.onclick=finishAll;
+function checkNeedDeleteAllFinishedTasksButton() {
+    if (finishedTasks.childElementCount == 2) {
+        finishedTasks.removeChild(document.getElementById("deleteAllFinishedTasksButton"));
+    } else if (finishedTasks.childElementCount == 1) {
+        finishedTasks.appendChild(deleteAllFinishedTasksButton);
+    }
     save();
-}
-
-clearFinishedTasksButton.onclick=clearFinishedTasks;
-function clearFinishedTasks() {
-    var list=this.parentNode;    
-    while( list.firstChild ){
-        deletedTasks.appendChild(list.firstChild);
-      }    
-    list.appendChild(clearFinishedTasksButton);
-    clearFinishedTasksButton.onclick=clearFinishedTasks; 
-    save();   
-}
-
-trueDeleteButton.onclick=trueDelete;
-function trueDelete() {    
-    var list=this.parentNode;    
-    while( list.firstChild ){
-        list.removeChild( list.firstChild );
-      }    
-    list.appendChild(trueDeleteButton);
-    trueDeleteButton.onclick=trueDelete;    
 }
 
 function save() {
-    var unfinishedTasksArr=[];  
-    var finishedTasksArr=[];  
+    try {
+        while (unfinishedTasks.querySelector("input")) {
+            unfinishedTasks.querySelector("input").parentNode.getElementsByClassName("saveButton")[0].onclick();
+        }
 
-    for(var i=1; i<unfinishedTasks.children.length; i++) {
-        unfinishedTasksArr.push(unfinishedTasks.children[i].getElementsByTagName('label')[0].innerText);
+        let unfinishedTasksArr = [];  
+        let finishedTasksArr = []; 
+
+        for (let i = 1; i < unfinishedTasks.childElementCount; i++) {               
+            unfinishedTasksArr.push(unfinishedTasks.children[i].getElementsByTagName("label")[0].innerText);     
+        }  
         
-    }
+        for (let i = 2; i < finishedTasks.childElementCount; i++) {
+            finishedTasksArr.push(finishedTasks.children[i].getElementsByTagName("label")[0].innerText);
+        }
 
-    for(var i=1; i<finishedTasks.children.length; i++) {
-        finishedTasksArr.push(finishedTasks.children[i].getElementsByTagName('label')[0].innerText);
+        localStorage.removeItem("ToDoList");
+        localStorage.setItem(
+            "ToDoList", JSON.stringify({unfinishedTasks: unfinishedTasksArr, finishedTasks: finishedTasksArr}));
+    } catch (e) {
+        //Для попытки изменения состояние задачи в процессе редактирования элемента
     }
-    
-    
-    localStorage.removeItem('todo');
-    localStorage.setItem('todo', JSON.stringify({unfinishedTasks: unfinishedTasksArr, finishedTasks: finishedTasksArr}));
 }
 
 function load() {
-    return JSON.parse(localStorage.getItem('todo'));
-}
-
-{
-    var data=load();
-    if (unfinishedTasks) {
-        for (var i=0; i<data.unfinishedTasks.length; i++){
-            var listItem = createNewElement(data.unfinishedTasks[i]);
-            unfinishedTasks.appendChild(listItem);
-        }
-    }
-
-    if (finishedTasks) {
-        for (var j=0; j<data.finishedTasks.length; j++) {
-            var listItem = createNewElement(data.finishedTasks[j]);
-            finishedTasks.appendChild(listItem);
-        }
-    }
+    return JSON.parse(localStorage.getItem("ToDoList"));
 }
 
 
+let tempData = load();
+
+if (tempData) {
+    if (unfinishedTasks.childElementCount == 0 && tempData.unfinishedTasks.length > 0) {
+        unfinishedTasks.appendChild(finishAllTaskButton);    
+        for (let i = 0; i < tempData.unfinishedTasks.length; i++) {       
+            unfinishedTasks.appendChild(createNewUnfinishedTask(tempData.unfinishedTasks[i]));
+        }
+    }
+    if (finishedTasks.childElementCount == 0 && tempData.finishedTasks.length > 0) {      
+        for (let i = 0; i < tempData.finishedTasks.length; i++) {
+            let tempUnfinishedTask = createNewUnfinishedTask(tempData.finishedTasks[i]);
+            if (unfinishedTasks.childElementCount == 0) {
+                unfinishedTasks.appendChild(finishAllTaskButton);
+            }
+            unfinishedTasks.appendChild(tempUnfinishedTask);
+            tempUnfinishedTask.firstChild.onclick();
+        }    
+    }
+}
