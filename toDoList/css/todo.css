@@ -28,6 +28,7 @@ input {
     background: #fff;
     border-radius: 6px;   
     color: #888;
+    font-family: 'Pacifico', cursive;
 }
 
 #unfinishedTasks {

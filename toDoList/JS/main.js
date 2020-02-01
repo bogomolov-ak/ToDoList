@@ -66,7 +66,8 @@ function createNewUnfinishedTask(textValue) {
     switchFUButton.className = "switchFUButton";   
     switchFUButton.onclick=switchFinishedUnfinished;
 
-    let switchESButton = document.createElement("button");    
+    let switchESButton = document.createElement("button");  
+    switchESButton.className = "editSaveButton";  
     switchESButton.textContent="edit";
     switchESButton.onclick=switchEditSaveTask;
 
@@ -146,6 +147,7 @@ function switchDeletedUndeleted() {
             break;
         }
     }
+
     save();
 }
 
@@ -165,9 +167,9 @@ function switchEditSaveTask() {
         let textContent = input.value;
         let label = document.createElement("label");
         label.textContent = textContent;
-        input = parentNode.replaceChild(label, input);   
-        save();     
-    }     
+        input = parentNode.replaceChild(label, input); 
+        save();//Функция save() вызывает закрытие редактируемых элементов     
+    }       
 }
 
 //Завершение всех незавершенных задач.
@@ -182,8 +184,7 @@ function deleteAllFinishedTasks() {
     while (finishedTasks.childElementCount > 2) {        
         finishedTasks.children[2].children[3].onclick();       
     }    
-    checkNeedDeleteAllFinishedTasksButton();
-    save();
+    checkNeedDeleteAllFinishedTasksButton();   
 }
 
 //Функция очистки списка удаленных задач.
@@ -201,8 +202,7 @@ function checkFinishedTasksHeader() {
         finishedTasks.appendChild(finishedTasksListHeader);
     } else if (finishedTasks.childElementCount == 1) {
         finishedTasks.removeChild(document.getElementById("finishedTasksListHeader"));
-    }
-    save();
+    }   
 }
 
 //Функция для проверки необходимости заголовка списка удаленных задач.
@@ -212,8 +212,7 @@ function checkDeletedTasksHeader() {
         deletedTasks.appendChild(deletedTasksListHeader); 
     } else if (deletedTasks.childElementCount == 1) {
         deletedTasks.removeChild(document.getElementById("deletedTasksListHeader"));
-    } 
-    save();     
+    }    
 }
 
 //Функция для проверки необходимости кнопки завершения всех незавершенных задач.
@@ -223,8 +222,7 @@ function checkNeedFinishAllTasksButton() {
         unfinishedTasks.removeChild(document.getElementById("finishAllTaskButton"));
     } else if (unfinishedTasks.childElementCount == 0) {
         unfinishedTasks.appendChild(finishAllTaskButton);
-    }
-    save();
+    }   
 }
 
 //Функция для проверки необходимости кнопки удаления всех завершенных задач.
@@ -234,8 +232,7 @@ function checkNeedDeleteAllFinishedTasksButton() {
         finishedTasks.removeChild(document.getElementById("deleteAllFinishedTasksButton"));
     } else if (finishedTasks.childElementCount == 1) {
         finishedTasks.appendChild(deleteAllFinishedTasksButton);
-    }
-    save();
+    }    
 }
 
 //Функция для проверки необходимости кнопки очистки списка удаленных задач.
@@ -252,25 +249,24 @@ function checkNeedClearAllDeletedTasksButton() {
 function save() {
     try {
         while (unfinishedTasks.querySelector("input")) {
-            unfinishedTasks.querySelector("input").parentNode.getElementsByClassName("saveButton")[0].onclick();
+            unfinishedTasks.querySelector("input").parentNode.getElementsByClassName("editSaveButton")[0].onclick();
         }
 
         let unfinishedTasksArr = [];  
         let finishedTasksArr = []; 
 
         for (let i = 1; i < unfinishedTasks.childElementCount; i++) {               
-            unfinishedTasksArr.push(unfinishedTasks.children[i].getElementsByTagName("label")[0].innerText);     
+            unfinishedTasksArr.push(unfinishedTasks.children[i].children[1].textContent);              
         }  
         
         for (let i = 2; i < finishedTasks.childElementCount; i++) {
-            finishedTasksArr.push(finishedTasks.children[i].getElementsByTagName("label")[0].innerText);
+            finishedTasksArr.push(finishedTasks.children[i].children[1].textContent);           
         }
 
         localStorage.removeItem("ToDoList");
         localStorage.setItem(
             "ToDoList", JSON.stringify({unfinishedTasks: unfinishedTasksArr, finishedTasks: finishedTasksArr}));
-    } catch (e) {
-        //Для попытки изменения состояние задачи в процессе редактирования элемента
+    } catch (e) {        
     }
 }
 
