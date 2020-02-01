@@ -82,14 +82,17 @@ li > input {
 
 .finishedTask > label {
     text-decoration: line-through;
+    color: rgb(138, 138, 138);   
 }
 
 .deletedFromFinishedTasks > label {
     text-decoration: line-through;
+    color: rgb(138, 138, 138);   
 }
 
 .deletedFromUnfinishedTasks > label {
     text-decoration: line-through;
+    color: rgb(138, 138, 138);   
 }
 
 .finishedTask > .switchFUButton {
@@ -97,7 +100,7 @@ li > input {
     border-radius: 4px;   
     width: 16px;
     height: 16px;
-    background-color: #333;
+    background-color: rgb(138, 138, 138);
 }
 
 .deletedFromFinishedTasks > .switchFUButton {
@@ -105,7 +108,7 @@ li > input {
     border-radius: 4px;   
     width: 16px;
     height: 16px;
-    background-color: #333;
+    background-color: rgb(138, 138, 138);
 }
 
 .deletedFromUnfinishedTasks > .switchFUButton {
@@ -113,7 +116,7 @@ li > input {
     border-radius: 4px;   
     width: 16px;
     height: 16px;
-    background-color: #333;
+    background-color: rgb(138, 138, 138);
 }
 
 .unfinishedTask > .switchFUButton {
@@ -121,4 +124,24 @@ li > input {
     border-radius: 4px;   
     width: 16px;
     height: 16px;
+}
+
+/*.deletedFromUnfinishedTasks > .editSaveButton {
+    color: rgb(184, 184, 184);
+}
+
+.deletedFromUnfinishedTasks > .deleteButton {
+    color: rgb(184, 184, 184);
+}
+
+.deletedFromFinishedTasks > .editSaveButton {
+    color: rgb(184, 184, 184);
+}
+
+.deletedFromFinishedTasks > .deleteButton {
+    color: rgb(184, 184, 184);
+}*/
+
+#finishedTasks {
+    margin-top: 80px;
 }

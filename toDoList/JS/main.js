@@ -71,7 +71,8 @@ function createNewUnfinishedTask(textValue) {
     switchESButton.textContent="edit";
     switchESButton.onclick=switchEditSaveTask;
 
-    let switchDUButton = document.createElement("button");    
+    let switchDUButton = document.createElement("button");
+    switchDUButton.className = "deleteButton";    
     switchDUButton.textContent="delete";
     switchDUButton.onclick=switchDeletedUndeleted;
 
