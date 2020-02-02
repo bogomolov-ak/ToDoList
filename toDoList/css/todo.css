@@ -17,8 +17,56 @@ input, button {
 outline: none;
 }
 
-input {   
+header > input {   
     width: 312px; 
+    margin: 0;
+    font-size: 18px;
+    line-height: 18px;
+    height: 18px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;   
+    color: #888;
+    font-family: 'Pacifico', cursive;
+}
+
+li {
+    overflow: hidden;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    list-style-type: none;
+}
+    
+label {    
+        display: inline-block ;
+        font-size: 18px;    
+        line-height: 20px;    
+        width: 206px; 
+        padding: 0 0 0 11px; 
+}
+
+#unfinishedTasks > li > label {
+    width: 246px;
+    font-weight: bolder;
+}
+
+.taskEditor {
+    width: 195px; 
+    margin: 0;
+    font-size: 18px;
+    line-height: 18px;
+    height: 18px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;   
+    color: #888;
+    font-family: 'Pacifico', cursive;
+}
+
+#unfinishedTasks > li > .taskEditor {
+    width: 235px; 
     margin: 0;
     font-size: 18px;
     line-height: 18px;
@@ -35,7 +83,7 @@ input {
     padding-inline-start: 0px;    
 }
 
-button {
+#addNewTaskButton, #finishAllTaskButton, #deleteAllFinishedTasksButton, #clearDeletedTasksButton, .switchEditSaveButton, .switchDeleteRecoverButton {
 background: none;
 border: 0px;
 color: #888;
@@ -50,35 +98,22 @@ button:hover {
     color: #333;
 }
 
-li {
-overflow: hidden;
-padding: 20px 0;
-border-bottom: 1px solid #eee;
-list-style-type: none;
+#addNewTaskButton:hover {
+    color: #333;
 }
 
-label {    
-    display: inline-block ;
-    font-size: 18px;    
-    line-height: 20px;    
-    width: 208px; 
-    padding: 0 0 0 11px; 
+#finishAllTaskButton:hover {
+    color: #333;
 }
 
-
-
-#unfinishedTasks > li > label {
-    width: 248px;
-    font-weight: bolder;
+#deleteAllFinishedTasksButton:hover {
+    color: #333;
 }
 
-li > input {
-    width: 197px;
+#clearDeletedTasksButton:hover {
+    color: #333;
 }
 
-#unfinishedTasks > li > input {
-    width: 237px;
-}
 
 .finishedTask > label {
     text-decoration: line-through;
@@ -95,53 +130,15 @@ li > input {
     color: rgb(138, 138, 138);   
 }
 
-.finishedTask > .switchFUButton {
-    border: 1px solid #ddd;
-    border-radius: 4px;   
-    width: 16px;
-    height: 16px;
-    background-color: rgb(138, 138, 138);
-}
-
-.deletedFromFinishedTasks > .switchFUButton {
-    border: 1px solid #ddd;
-    border-radius: 4px;   
-    width: 16px;
-    height: 16px;
-    background-color: rgb(138, 138, 138);
-}
-
-.deletedFromUnfinishedTasks > .switchFUButton {
-    border: 1px solid #ddd;
-    border-radius: 4px;   
-    width: 16px;
-    height: 16px;
-    background-color: rgb(138, 138, 138);
-}
-
-.unfinishedTask > .switchFUButton {
-    border: 1px solid #ddd;
-    border-radius: 4px;   
-    width: 16px;
-    height: 16px;
-}
-
-/*.deletedFromUnfinishedTasks > .editSaveButton {
-    color: rgb(184, 184, 184);
-}
-
-.deletedFromUnfinishedTasks > .deleteButton {
-    color: rgb(184, 184, 184);
-}
-
-.deletedFromFinishedTasks > .editSaveButton {
-    color: rgb(184, 184, 184);
-}
-
-.deletedFromFinishedTasks > .deleteButton {
-    color: rgb(184, 184, 184);
-}*/
 
 #finishedTasks {
     margin-top: 80px;
 }
+
+.checkbox {
+    width: 16px;
+    height: 16px; 
+    display: inline-block;
+    cursor: pointer;
+}
+
