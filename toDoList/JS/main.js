@@ -117,13 +117,11 @@ function switchFinishedUnfinished(thisTask) {
     if (thisTask.className == "unfinishedTask") {
         checkNeedFinishedTasksHeaderAndDeleteAllFinishedTasksButton();        
         thisTask.className="finishedTask"; 
-        thisTask.getElementsByClassName("checkbox")[0].checked=true;
         finishedTasks.appendChild(thisTask);
         checkNeedFinishAllTasksButton();        
     } else if (thisTask.className == "finishedTask") {
         checkNeedFinishAllTasksButton();
-        thisTask.className="unfinishedTask";  
-        thisTask.getElementsByClassName("checkbox")[0].checked=false;     
+        thisTask.className="unfinishedTask";       
         unfinishedTasks.appendChild(thisTask);         
         checkNeedFinishedTasksHeaderAndDeleteAllFinishedTasksButton();      
     }
@@ -339,10 +337,12 @@ function onDrop(event) {
 
     if (document.getElementById(id).className == "finishedTask" && (
         event.target.id == "myNewTaskInput" || event.target.id == "unfinishedTasks" || event.target.parentNode.id == "unfinishedTasks" || event.target.parentNode.parentNode.id == "unfinishedTasks")) {
-        switchFinishedUnfinished(document.getElementById(id));    
+        switchFinishedUnfinished(document.getElementById(id));
+        document.getElementById(id).getElementsByClassName("checkbox")[0].checked = false;    
     }  else if (document.getElementById(id).className == "unfinishedTask" && 
     (event.target.id == "finishedTasks" || event.target.parentNode.id == "finishedTasks" || event.target.parentNode.parentNode.id)) {
         switchFinishedUnfinished(document.getElementById(id));  
+        document.getElementById(id).getElementsByClassName("checkbox")[0].checked = true;   
     }  
 
     event
