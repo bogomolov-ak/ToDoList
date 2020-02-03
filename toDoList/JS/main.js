@@ -117,11 +117,13 @@ function switchFinishedUnfinished(thisTask) {
     if (thisTask.className == "unfinishedTask") {
         checkNeedFinishedTasksHeaderAndDeleteAllFinishedTasksButton();        
         thisTask.className="finishedTask"; 
+        thisTask.getElementsByClassName("checkbox")[0].checked=true;
         finishedTasks.appendChild(thisTask);
         checkNeedFinishAllTasksButton();        
     } else if (thisTask.className == "finishedTask") {
         checkNeedFinishAllTasksButton();
-        thisTask.className="unfinishedTask";       
+        thisTask.className="unfinishedTask";  
+        thisTask.getElementsByClassName("checkbox")[0].checked=false;     
         unfinishedTasks.appendChild(thisTask);         
         checkNeedFinishedTasksHeaderAndDeleteAllFinishedTasksButton();      
     }
